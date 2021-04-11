@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class OptimizationResult(object):
     
-    success: bool
+    success: str
     status: str
     message: str
     weights: Dict
@@ -119,8 +119,8 @@ class SimplePortfolioReturnOptimizer(PortfolioOptimizer):
             logger.debug(f"Optimized weights {optimized_weights}")
 
             result = OptimizationResult(
+                success = str(optimized_allocation.success),
                 status = optimized_allocation.status,
-                success = optimized_allocation.success,
                 message = optimized_allocation.message,
                 weights = optimized_weights
             )
