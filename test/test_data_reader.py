@@ -7,7 +7,7 @@ from pct.data.data_reader import SimpleIndexedCSVDataset
 basedir = os.path.abspath(os.path.dirname(__file__))
 data_dir = os.path.join(basedir, r'data')
 
-TEST_HISTORICAL_PRICES_FILE_NAME = 'prices.csv'
+TEST_HISTORICAL_PRICES_FILE_NAME = 'test_prices.csv'
 
 class TestDatasetReader(TestCase):
 

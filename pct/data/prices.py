@@ -5,6 +5,7 @@ import yfinance as yf
 from typing import Union, List, Set
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from tabulate import tabulate
 
 HISTORICAL_PRICES_COLUMNS = ['date', 'ticker', 'open','high','low','close','volume']
 
@@ -105,7 +106,7 @@ class PriceHistory():
     
 
         def __str__(self):
-        return self.__repr__()
+            return tabulate(self.prices.head(5), headers="keys")
 
     def __repr__(self):
 

@@ -49,11 +49,11 @@ class OptimizerParameters(object):
             raise ex
 
         parameters = defaultdict(lambda: raise_(
-            OptimizationParametersException('Requested function does not exist')))
+            OptimizationParametersException('Requested parameter does not exist')))
 
         try:
             # Mandatory constraints.
-            # We expect to exit the programs if mandatory keys are not provided
+            # We expect to exit the programs byt throwing an exception if mandatory keys are not provided
 
             tickers = optimizer_params[OptimizerParameters.TICKERS_KEY]
 
@@ -68,6 +68,8 @@ class OptimizerParameters(object):
             bounds = tuple((0, 1) for ticker in range(len(tickers)))
 
             method = optimizer_params.get(OptimizerParameters.METHOD_KEY, 'SLSQP')
+            
+            tag = optimizer_params.get(OptimizerParameters.TAG_KEY, None)
 
             # Constraints come in a form of function names {'type': 'eq', 'fun': sum_of_weights }
 
@@ -86,6 +88,7 @@ class OptimizerParameters(object):
             logger.error(f"Failed to extract parameter keys: {e}")
             raise OptimizationParametersException(e) from e
         else:
+            parameters[OptimizerParameters.TAG_KEY] = tag
             parameters[OptimizerParameters.METHOD_KEY] = method
             parameters[OptimizerParameters.TICKERS_KEY] = tickers
             parameters[OptimizerParameters.FUNCTION_KEY] = func
@@ -94,19 +97,6 @@ class OptimizerParameters(object):
             parameters[OptimizerParameters.CONSTRAINTS_KEY] = constraints
             return parameters
 
-
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
-
-        attrs_list = ["{}={!r}".format(attr_name, getattr(self, attr_name))
-                      for attr_name in self._attributes
-                      if getattr(self, attr_name) is not None]
-
-        attrs = ", ".join(attrs_list)
-        cls_name = self, __class__.__name__
-        return "{}({})".format(cls_name, attrs)
 
     @staticmethod
     def get_function(function_key: str):
