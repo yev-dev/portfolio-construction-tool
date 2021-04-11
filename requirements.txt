@@ -1,7 +1,15 @@
 pandas
+requests
 yfinance
 bs4
 pandas_datareader
 jupyterlab
 matplotlib
 scipy
+tabulate
+Flask
+flask-restplus
+swagger-ui-bundle
+connexion
+dataclasses
+click

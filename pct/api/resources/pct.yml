@@ -1,0 +1,95 @@
+openapi: "3.0.2"
+info:
+  title: Portfolio Construction Tool Api
+  version: "1.0"
+  description: Portfolio Construction Tool to run optimization
+  contact:
+    email: yev.developer@gmail.com
+servers:
+  - url: http://localhost:5000/v1.0
+
+paths:
+  /status:
+    get:
+      summary: API status
+      description: Checking a service status
+      operationId: pct.api.app.status
+      tags:
+        - "Healthcheck"
+      responses:
+        200:
+          description: OK status
+        400:
+          description: Could not process request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+  /metadata:
+    get:
+      summary: Optimizer metadata
+      description: Provides optimizer metadata metrics
+      operationId: pct.api.app.metadata
+      tags:
+        - "Optimizer"
+      responses:
+        200:
+          description: OK - have successfully processed request
+          content:
+            application/json:
+              schema:
+                type: object
+        400:
+          description: Could not process metrics request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+  /tag:
+    get:
+      summary: Optimizer metrics
+      description: Provides optimizer tag
+      operationId: pct.api.app.tag
+      tags:
+        - "Optimizer"
+      responses:
+        200:
+          description: OK - have successfully processed request
+          content:
+            application/json:
+              schema:
+                type: object
+        400:
+          description: Could not process tags request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+
+  /optimize:
+    post:
+      summary: Models metrics
+      description: Provides optimizer tag
+      operationId: pct.api.app.optimize
+      tags:
+        - "Optimizer"
+      responses:
+        200:
+          description: OK - have successfully processed request
+          content:
+            application/json:
+              schema:
+                type: object
+      
+
+components:
+  schemas:
+    ErrorMessage:
+      description: Generic returned error for the interface
+      type: object
+      properties:
+        error_message:
+          type: string
+          description: Failed to process a request to portfolio costruction
