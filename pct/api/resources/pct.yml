@@ -70,11 +70,18 @@ paths:
 
   /optimize:
     post:
-      summary: Models metrics
-      description: Provides optimizer tag
+      summary: Portfolio Optimization Request
+      description: Runs Portfolio Optimization
       operationId: pct.api.app.optimize
       tags:
         - "Optimizer"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioOptimizationRequest"
+        required: true
+
       responses:
         200:
           description: OK - have successfully processed request
@@ -82,10 +89,81 @@ paths:
             application/json:
               schema:
                 type: object
+        400:
+          description: Could not process tags request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
       
 
 components:
   schemas:
+
+    PortfolioOptimizationRequest:
+      type: object
+      description: Request to run Portfolio Optimization
+      properties: 
+        requestId:
+          type: string
+        tag: 
+          type: string
+        tickers: 
+          type: array
+        func: 
+          type: string
+        # constraints:
+        #   type: object
+        #   additionalProperties:
+        #     type: object
+        #     properties:
+        #       code:
+        #         type: string
+        #       text:
+        #         type: string
+          
+        
+      example:
+        request_id: xx12345
+        tag: scipy_optimizer_v1
+        tickers: ["AAPL","MSFT","AMZN"]
+        func: portfolio_return
+        # constraints: {"sum_of_weights": 'eq'}
+    
+    OptimizationConstraints:
+      type: object
+      properties:
+        code:
+          type: string
+        text:
+          type: string
+
+
+    PortfolioOptimizationResponse:
+      type: object
+      description: Portfolio Optimization Response
+      properties:
+        success:
+          type: string
+        status:
+          type: string
+        message:
+          type: string
+        weights:
+          type: object
+          additionalProperties: 
+            $ref: "#/components/schemas/PortfolioWeight"
+    
+    PortfolioWeight:
+      type: object
+      properties:
+        code:
+          type: string
+        text:
+          type: number
+
+
+
     ErrorMessage:
       description: Generic returned error for the interface
       type: object
