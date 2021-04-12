@@ -4,7 +4,7 @@ A simple implementation of portfolio construction tool with an optimizer exposed
 
 The work is still in progress. Current implementation uses SciPy to optimize portfolio weights.
 
-Jupyter notebook: [Portfolio Optimization](https://github.com/yev-dev/portfolio-construction-tool/blob/main/notebooks/portfolio_optimization.ipynb)
+Jupyter notebook: [Portfolio Optimization](https://nbviewer.jupyter.org/github/yev-dev/portfolio-construction-tool/blob/main/notebooks/portfolio_optimization.ipynb)
 
 ![Portfolio Construction API](https://github.com/yev-dev/portfolio-construction-tool/blob/main/doc/portfolio-construction-api-swagger.png?raw=true)
 
