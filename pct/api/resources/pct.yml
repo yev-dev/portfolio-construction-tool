@@ -112,15 +112,15 @@ components:
           type: array
         func: 
           type: string
-        # constraints:
-        #   type: object
-        #   additionalProperties:
-        #     type: object
-        #     properties:
-        #       code:
-        #         type: string
-        #       text:
-        #         type: string
+        constraints:
+          type: object
+          additionalProperties:
+            type: string
+            properties:
+              code:
+                type: string
+              text:
+                type: string
           
         
       example:
@@ -128,16 +128,8 @@ components:
         tag: scipy_optimizer_v1
         tickers: ["AAPL","MSFT","AMZN"]
         func: portfolio_return
-        # constraints: {"sum_of_weights": 'eq'}
-    
-    OptimizationConstraints:
-      type: object
-      properties:
-        code:
-          type: string
-        text:
-          type: string
-
+        constraints: {"sum_of_weights": 'eq'}
+  
 
     PortfolioOptimizationResponse:
       type: object
