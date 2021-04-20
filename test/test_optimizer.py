@@ -44,7 +44,6 @@ def build_sample_optimization_parameters(tickers: List = None):
     request = {}
     request[OptimizerParameters.TAG_KEY] = 'scipy_optimizer_v1'
     request[OptimizerParameters.TICKERS_KEY] = tickers
-    request[OptimizerParameters.FUNCTION_KEY] = OptimizerParameters.PORTFOLIO_RETURN_FUNC
     request[OptimizerParameters.CONSTRAINTS_KEY] = constraints
 
     return OptimizerParameters(**request)

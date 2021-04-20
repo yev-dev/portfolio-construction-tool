@@ -90,10 +90,19 @@ class SimplePortfolioReturnOptimizer(PortfolioOptimizer):
 
         logger.debug(opt_parameters)
 
+        def portfolio_returns(weights, df_portfolio):
+            # Distribute allocation by weights
+            df_portfolio = df_portfolio * weights
+            portfolio_return = df_portfolio.sum(axis=1)
+            portfolio_return = portfolio_return[-1]
+
+            # Minimum is a maximum, we need to negate as SciPy optimizer can only minimize
+            return -portfolio_return
+
+
         try:
             tag = opt_parameters[OptimizerParameters.TAG_KEY]
             method = opt_parameters[OptimizerParameters.METHOD_KEY]
-            optimizer_func = opt_parameters[OptimizerParameters.FUNCTION_KEY]
 
             tickers = opt_parameters[OptimizerParameters.TICKERS_KEY]
             initial_weights = opt_parameters[OptimizerParameters.INITIAL_WEIGHTS_KEY]
@@ -101,7 +110,7 @@ class SimplePortfolioReturnOptimizer(PortfolioOptimizer):
             constraints = opt_parameters[OptimizerParameters.CONSTRAINTS_KEY]
 
             optimized_allocation = sci_opt.minimize(
-                fun=optimizer_func, # Function that we use to minimize
+                fun=portfolio_returns, # Function that we use to minimize
                 x0 = initial_weights, # Starting value. Equal allocation
                 args=df_portfolio, 
                 method=method,
@@ -119,7 +128,7 @@ class SimplePortfolioReturnOptimizer(PortfolioOptimizer):
             logger.debug(f"Optimized weights {optimized_weights}")
 
             result = OptimizationResult(
-                success = str(optimized_allocation.success),
+                success = optimized_allocation.success,
                 status = optimized_allocation.status,
                 message = optimized_allocation.message,
                 weights = optimized_weights
@@ -130,6 +139,26 @@ class SimplePortfolioReturnOptimizer(PortfolioOptimizer):
     @property
     def fields(self):
         return ['ticker', 'close']
+
+
+class MonteCarloSimulationOptimizer(PortfolioOptimizer):
+    """ Simulates weights in order to maximize Sharpe Ratio and to minimize volatility 
+
+    Args:
+        PortfolioOptimizer ([type]): [description]
+    """
+    
+    def _prepare_portfolio(self, df_portfolio) -> pd.DataFrame:
+        raise NotImplementedError
+    
+    def _optimize_portfolio(self, df_portfolio) -> OptimizationResult:
+        
+        num_of_simulations = 3000
+        
+        # we need to store simulation results into arrays
+
+        # prepare the weights array of numpy
+        all_weights = np.zeros()
 
 
 class SharpeRationOptimizer(PortfolioOptimizer):

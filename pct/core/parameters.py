@@ -57,8 +57,6 @@ class OptimizerParameters(object):
 
             tickers = optimizer_params[OptimizerParameters.TICKERS_KEY]
 
-            func = self.get_function(optimizer_params[OptimizerParameters.FUNCTION_KEY])
-
             initial_weights = optimizer_params.get(OptimizerParameters.INITIAL_WEIGHTS_KEY, None)
 
             if not initial_weights:
@@ -91,7 +89,6 @@ class OptimizerParameters(object):
             parameters[OptimizerParameters.TAG_KEY] = tag
             parameters[OptimizerParameters.METHOD_KEY] = method
             parameters[OptimizerParameters.TICKERS_KEY] = tickers
-            parameters[OptimizerParameters.FUNCTION_KEY] = func
             parameters[OptimizerParameters.INITIAL_WEIGHTS_KEY] = initial_weights
             parameters[OptimizerParameters.BOUNDS_KEY] = bounds
             parameters[OptimizerParameters.CONSTRAINTS_KEY] = constraints
@@ -114,15 +111,7 @@ class OptimizerParameters(object):
 
         # Methods related to optimisation functions
 
-        def portfolio_returns(weights, df_portfolio):
-            # Distribute allocation by weights
-            df_portfolio = df_portfolio * weights
-            portfolio_return = df_portfolio.sum(axis=1)
-            portfolio_return = portfolio_return[-1]
-
-            # Minimum is a maximum, we need to negate as SciPy optimizer can only minimize
-            return -portfolio_return
-
+        
         # Defining all function in function_mapper registry
 
         functions_mapper = defaultdict(lambda: raise_(
@@ -133,7 +122,6 @@ class OptimizerParameters(object):
             'equally_weighted': lambda tickers: len(tickers) * [1 / len(tickers)],
             'sum_of_weights': lambda weights: np.sum(weights) - 1.0,
             'target_return': lambda weights, target_return, expected_returns: target_return - weights.T@expected_returns,
-            'portfolio_return': portfolio_returns
         }
 
         return functions_mapper.get(function_key)
