@@ -49,4 +49,11 @@ Jupyter notebook: [Portfolio Optimization](https://nbviewer.jupyter.org/github/y
 
     For pip env - delete associated directory
 
+### OpenAPI client generation 
+
+Portfolio Construction Tool exposes operations via Restful API endpoints and OpenAPI specification for stronly typed server/client.
+
+Get the latest version of swagger-codegen from [swagger-codegen git repository](https://github.com/swagger-api/swagger-codegen) or install it with brew command:
+
+        brew install swagger-codegen
 

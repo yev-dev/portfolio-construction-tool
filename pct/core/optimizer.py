@@ -26,13 +26,16 @@ class OptimizationResult(object):
 class PortfolioOptimizer(abc.ABC):
 
     def __init__(self, parameters: OptimizerParameters) -> None:
-       
-        self._opt_parameters = parameters
+        self._parameters = parameters
     
     @property
     def parameters(self) -> OptimizerParameters:
-        return self._opt_parameters
-
+        return self._parameters
+    
+    @property
+    def fields(self):
+        return ['ticker', 'close']
+    
     def optimize(self, df_portfolio) -> OptimizationResult:
         logger.info(f"Starting ")
 
@@ -128,17 +131,13 @@ class SimplePortfolioReturnOptimizer(PortfolioOptimizer):
             logger.debug(f"Optimized weights {optimized_weights}")
 
             result = OptimizationResult(
-                success = optimized_allocation.success,
+                success = str(optimized_allocation.success),
                 status = optimized_allocation.status,
                 message = optimized_allocation.message,
                 weights = optimized_weights
             )
 
         return result
-
-    @property
-    def fields(self):
-        return ['ticker', 'close']
 
 
 class MonteCarloSimulationOptimizer(PortfolioOptimizer):

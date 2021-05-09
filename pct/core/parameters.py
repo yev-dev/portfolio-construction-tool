@@ -73,10 +73,10 @@ class OptimizerParameters(object):
 
             constraints = []
 
-            for _function, _operation in optimizer_params[OptimizerParameters.CONSTRAINTS_KEY].items():
+            for constraint in optimizer_params[OptimizerParameters.CONSTRAINTS_KEY]:
                 _constraint = {}
-                _constraint['type'] = _operation
-                _constraint['fun'] = OptimizerParameters.get_function(_function)
+                _constraint['type'] = constraint['operation']
+                _constraint['fun'] = OptimizerParameters.get_function(constraint['function'])
                 constraints.append(_constraint)
 
             if not constraints:

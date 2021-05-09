@@ -2,8 +2,7 @@ import os
 import logging
 import sys
 import connexion
-
-from connexion.resolver import RestyResolver
+from flask import jsonify
 
 from pct.data.data_reader import SimpleIndexedCSVDataset
 from pct.core.parameters import OptimizerParameters
@@ -16,6 +15,7 @@ DATA_DIR = os.getenv('DATA_DIR', os.path.join(os.path.expanduser('~'), r'Data/qu
 HISTORICAL_PRICES_5_YRS = os.path.join(DATA_DIR, 'prices_5yrs.csv')
 HISTORICAL_PRICES_10_YRS = os.path.join(DATA_DIR, 'prices_10yrs.csv')
 
+
 def status():
     return 'OK', 200
 
@@ -27,44 +27,34 @@ def metadata():
 
 def optimize(body):
 
+    request = connexion.request.get_json()
+    tickers = request.get('tickers', None)
+
+    if not tickers:
+        return "Tickers are not found", connexion.status.HTTP_400_BAD_REQUEST
+
+    parameters = OptimizerParameters(**request)
+
     # Should come from service and persistent storage
     pricing_service = SimpleIndexedCSVDataset(fpath=HISTORICAL_PRICES_5_YRS)
     df_prices = pricing_service.read()
 
-
     # Should come from instruments service with validation
-    df_portfolio = df_prices[df_prices['ticker'].isin(['AAPL','MSFT','AMZN'])]
-
-    tickers = ['AAPL','MSFT','AMZN']
-    constraints = {'sum_of_weights' : 'eq'}
-
-    request = {}
-    request[OptimizerParameters.TAG_KEY] = body.get(OptimizerParameters.TAG_KEY)
-    request[OptimizerParameters.TICKERS_KEY] = body.get(OptimizerParameters.TICKERS_KEY)
-    request[OptimizerParameters.FUNCTION_KEY] = body.get(OptimizerParameters.FUNCTION_KEY)
-
-    request[OptimizerParameters.CONSTRAINTS_KEY] = constraints
-
-    parameters = OptimizerParameters(**request)
+    df_portfolio = df_prices[df_prices['ticker'].isin(tickers)]
 
     optimizer_service = SimplePortfolioReturnOptimizer(parameters)
 
     result = optimizer_service.optimize(df_portfolio=df_portfolio)
 
-
     return result
 
-
-
 app = connexion.FlaskApp(__name__, specification_dir='./resources/')
-app.add_api('pct.yml')
-
-# app.add_api('pct.yml', resolver=RestyResolver('pct.api'), arguments={'title': 'Portfolio Construction Api Service'}, pythonic_params=True)
+app.add_api('pct.yml', arguments={'title': 'Portfolio Construction Api Service'}, pythonic_params=True)
 
 # set the WSGI application callable to allow using uWSGI
 # uwsgi --http :8080 -w app
 
-application = app.app
+
 
 if __name__ == '__main__':
 

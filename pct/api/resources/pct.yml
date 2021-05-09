@@ -6,7 +6,8 @@ info:
   contact:
     email: yev.developer@gmail.com
 servers:
-  - url: http://localhost:5000/v1.0
+  - url: http://localhost:5000/api
+
 
 paths:
   /status:
@@ -88,14 +89,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: "#/components/schemas/PortfolioOptimizationResponse"
         400:
           description: Could not process tags request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorMessage"
-      
+
 
 components:
   schemas:
@@ -110,26 +111,46 @@ components:
           type: string
         tickers: 
           type: array
+          items:
+            type: string
         func: 
           type: string
         constraints:
-          type: object
-          additionalProperties:
-            type: string
-            properties:
-              code:
-                type: string
-              text:
-                type: string
-          
-        
+          type: array
+          items: 
+            $ref: "#/components/schemas/OptimizationConstraints"
       example:
         request_id: xx12345
         tag: scipy_optimizer_v1
         tickers: ["AAPL","MSFT","AMZN"]
         func: portfolio_return
-        constraints: {"sum_of_weights": 'eq'}
-  
+        constraints: [
+            {
+              function : "sum_of_weights",
+              operation : "eq"
+            }
+        ]
+          
+    OptimizationConstraints:
+      type: object
+      items: 
+        $ref: "#/components/schemas/OptimizationConstraint"
+
+    OptimizationConstraint:
+      type: object
+      required:
+        - "function"
+        - "operation"
+      properties:
+        function:
+          type: string
+        operation:
+          type: string
+      example:
+        function: "sum_of_weights"
+        operation: "eq"
+
+
 
     PortfolioOptimizationResponse:
       type: object
