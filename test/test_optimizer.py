@@ -31,7 +31,7 @@ class TestPortfolioOptimizer(TestCase):
 
         result = optimizer.optimize(df_portfolio=df_portfolio)
         # print(result)
-        self.assertEqual(result.success, True)
+        self.assertEqual(result.success, 'True')
         self.assertEqual(result.status, 0)
         self.assertEqual(result.message, 'Optimization terminated successfully')
 
@@ -39,7 +39,14 @@ class TestPortfolioOptimizer(TestCase):
 def build_sample_optimization_parameters(tickers: List = None):
 
     tickers = ['APPL', 'FB'] if not tickers else tickers
-    constraints = {'sum_of_weights' : 'eq'}
+    # constraints = {'sum_of_weights' : 'eq'}
+
+    constraints = [
+            {
+              'function' : "sum_of_weights",
+              'operation' : "eq"
+            }
+        ]
         
     request = {}
     request[OptimizerParameters.TAG_KEY] = 'scipy_optimizer_v1'

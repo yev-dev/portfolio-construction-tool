@@ -41,8 +41,7 @@ class PortfolioOptimizer(abc.ABC):
 
         # Normalize and validate data
         df = self._prepare_portfolio(df_portfolio=df_portfolio)
-        result = self._optimize_portfolio(df_portfolio=df)
-        return result
+        return self._optimize_portfolio(df_portfolio=df)
 
     @abc.abstractclassmethod
     def _prepare_portfolio(self, df_portfolio) -> pd.DataFrame:

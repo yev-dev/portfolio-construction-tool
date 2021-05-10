@@ -46,19 +46,27 @@ class TestOptimizationParameterFunctions(TestCase):
 
     def test_multiple_functions(self):
 
-        list_of_constraints = {
-            'sum_of_weights': 'eq',
-            'target_return' : 'eq'
-        }
+        list_of_constraints = [
+            {
+              'function' : "sum_of_weights",
+              'operation' : "eq"
+            },
+            {
+              'function' : "target_return",
+              'operation' : "eq"
+            },
+        ]
 
         constraints = []
 
-        for function, operation in list_of_constraints.items():
-            constraint = {}
-            constraint['type'] = operation
-            constraint['fun'] = OptimizerParameters.get_function(function)
-            constraints.append(constraint)
-
+        for constraint  in list_of_constraints:
+            _constraint = {}
+            _constraint['type'] = constraint['operation']
+            _constraint['fun'] = OptimizerParameters.get_function(constraint['function'])
+            constraints.append(_constraint)
+        
+        # constraints_2 = [ {k : v} for constraint in list_of_constraints for k,v in zip(['fun', 'type'], [ v for k,v in constraint.items() ] ) ]
+        
         self.assertTrue(len(constraints) == 2)
 
     def test_optimizer_parameters_transformation(self):
@@ -85,10 +93,17 @@ class TestOptimizationParameterFunctions(TestCase):
         with self.assertRaises(OptimizationParametersException) as context:
             parameters = OptimizerParameters(**request)
 
-def build_sample_optimization_parameters(tickers: List = None):
+def build_sample_optimization_parameters(tickers: List = None, constraints: List = None):
 
     tickers = ['APPL', 'FB'] if not tickers else tickers
-    constraints = {'sum_of_weights' : 'eq'}
+
+    if not constraints:
+        constraints = [
+            {
+              'function' : "sum_of_weights",
+              'operation' : "eq"
+            }
+        ]
         
     request = {}
     request[OptimizerParameters.TAG_KEY] = 'scipy_optimizer_v1'
