@@ -57,3 +57,22 @@ Get the latest version of swagger-codegen from [swagger-codegen git repository](
 
         brew install swagger-codegen
 
+
+
+## Constraints Database setup
+</br>
+
+
+        psql postgres -U admin
+        
+        CREATE DATABASE pct;
+        create user pct with encrypted password 'password123';
+        ALTER ROLE pct CREATEDB;
+
+        # Granting permissions to create schema
+        GRANT CREATE ON DATABASE pct to pct;
+
+#### Database Schama Design
+</br>
+
+![Portfolio Construction API](https://github.com/yev-dev/portfolio-construction-tool/blob/main/doc/constraints-db-schema.png?raw=true)
