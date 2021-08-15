@@ -12,7 +12,7 @@ data_dir = os.path.join(basedir, r'data')
 
 TEST_HISTORICAL_PRICES_FILE_NAME = 'prices.csv'
 
-class TestPortfolioOptimizer(TestCase):
+class TestSimplePortfolioReturnOptimizer(TestCase):
 
     def setUp(self) -> None:
         prices_fpath = os.path.join(data_dir, TEST_HISTORICAL_PRICES_FILE_NAME)
@@ -35,6 +35,19 @@ class TestPortfolioOptimizer(TestCase):
         self.assertEqual(result.status, 0)
         self.assertEqual(result.message, 'Optimization terminated successfully')
 
+
+class TestSharpeRationOptimizer(TestCase):
+
+    def setUp(self) -> None:
+        prices_fpath = os.path.join(data_dir, TEST_HISTORICAL_PRICES_FILE_NAME)
+        ds = SimpleIndexedCSVDataset(fpath=prices_fpath)
+        self.df_prices = ds.read()
+    
+    def test_prepare_portfolio(self):
+        self.assertTrue(False)
+    
+    def test_optimize_portfolio(self):
+        pass
 
 def build_sample_optimization_parameters(tickers: List = None):
 

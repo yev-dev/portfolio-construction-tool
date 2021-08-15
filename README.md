@@ -169,3 +169,7 @@ Get the latest version of swagger-codegen from [swagger-codegen git repository](
 
 
 </details>
+
+### References
+
+Twelve-factor app pattern as we develop and design each microservice: [here](https://12factor.net)
