@@ -1,5 +1,5 @@
 import os
-from datetime import datetime
+import sys
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
